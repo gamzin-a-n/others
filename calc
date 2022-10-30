@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Калькулятор</title>
+        <style>
+            td { text-align: center; }
+        </style>
+        <script>
+
+            let A = 0; // Операнд в памяти
+            let op = "="; // Тип операции
+            let B = 0; // Операнд с дисплея
+
+            function cl_1() {
+                B = 10*B+1;
+                document.getElementById("d").innerHTML = B;
+            }
+            function cl_2() {
+                B = 10*B+2;
+                document.getElementById("d").innerHTML = B;
+            }
+            function cl_3() {
+                B = 10*B+3;
+                document.getElementById("d").innerHTML = B;
+            }
+            function cl_4() {
+                B = 10*B+4;
+                document.getElementById("d").innerHTML = B;
+            }
+            function cl_5() {
+                B = 10*B+5;
+                document.getElementById("d").innerHTML = B;
+            }
+            function cl_6() {
+                B = 10*B+6;
+                document.getElementById("d").innerHTML = B;
+            }
+            function cl_7() {
+                B = 10*B+7;
+                document.getElementById("d").innerHTML = B;
+            }
+            function cl_8() {
+                B = 10*B+8;
+                document.getElementById("d").innerHTML = B;
+            }
+            function cl_9() {
+                B = 10*B+9;
+                document.getElementById("d").innerHTML = B;
+            }
+            function cl_0() {
+                B = 10*B;
+                document.getElementById("d").innerHTML = B;
+            }
+
+            function calculation(new_oper) {
+                switch (op) {
+                    case "+": {
+                        A = A + B;
+                        break;
+                    };
+                    case "-": {
+                        A = A - B;
+                        break;
+                    };
+                    case "*": {
+                        A = A * B;
+                        break;
+                    };
+                    case "/": {
+                        A = Math.round(A / B);
+                        break;
+                    };
+                    case "=": {
+                        A = B;
+                        break;
+                    };
+                }
+                B = 0;
+                document.getElementById("d").innerHTML = A;
+                op = new_oper;
+            }
+
+            function cl_plus() {
+                calculation("+");
+            }
+
+            function cl_minus() {
+                calculation("-");
+            }
+
+            function cl_mul() {
+                calculation("*");
+            }
+
+            function cl_sep() {
+                calculation("/");
+            }
+
+            function cl_eq() {
+                calculation("=");
+            }
+
+            function cl_c() {
+                A = 0;
+                op = "=";
+                B = 0;
+            }
+            
+        </script>
+    </head>
+    <body>
+        <!-- Тело документа -->
+        <table border="1" width="30%" align="center">
+            <tr>
+                <td width="100%" style="background: white; text-align: right;" id="d">0</td>
+            </tr>
+        </table>
+        <table border="1" width="30%" align="center">
+            <tr>
+                <td onclick="cl_7()">7</td><td onclick="cl_8()">8</td><td onclick="cl_9()">9</td><td onclick="cl_plus()">+</td>
+            </tr>
+            <tr>
+                <td onclick="cl_4()">4</td><td onclick="cl_5()">5</td><td onclick="cl_6()">6</td><td onclick="cl_minus()">-</td>
+            </tr>
+            <tr>
+                <td onclick="cl_1()">1</td><td onclick="cl_2()">2</td><td onclick="cl_3()">3</td><td onclick="cl_mul()">*</td>
+            </tr>            
+            <tr>
+                <td onclick="cl_c()">C</td><td onclick="cl_0()">0</td><td onclick="cl_eq()">=</td><td onclick="cl_sep()">/</td>
+            </tr>            
+        </table>
+        <p id="zzz"></p>
+    </body>
+</html>
