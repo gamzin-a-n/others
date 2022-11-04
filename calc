@@ -3,132 +3,348 @@
     <head>
         <title>Калькулятор</title>
         <style>
-            td { text-align: center; }
+
+            BODY {
+                background-color: white;
+            }
+
+            .container {
+                border: none;
+                width: 95%;
+                height: 100hv;
+                background-color: white;
+                margin: auto;
+                /* display: flex;
+                justify-content: center;
+                align-items: center; */
+            }
+
+            .calc {
+                border: 1px solid #c2c290;
+                background-color: #f2f2d0;
+                border-radius: 2px;
+                width: 400px;
+                margin: auto;
+                padding: 5px 5px 5px 5px;
+            }
+
+            #display {
+                box-sizing: border-box;
+                width: 100%;
+                /* height: 10vh; /* vh - проценты от видимой части экрана */
+                /* padding: 20px 10px; */
+                padding: 40px 5px;
+                border: none;
+                background: whitesmoke;
+                text-align: right;
+                font-weight: bold;
+                direction: ltr;
+            }
+
+            .c_btn {
+                color: red;
+                width: 24%;
+                height: 25px;
+                border-radius: 5px;
+                border: none;
+                margin-top: 3px;
+                margin-bottom: 10px;
+                background-color: #f2f2d0;
+            }
+
+            .btn {
+                width: 24%;
+                height: 45px;
+                border-radius: 5px;
+                border: none;
+                margin-top: 3px;
+                background-color: #f2f2d0;
+            }
+
+            .up_btn {
+                width: 24%;
+                height: 25px;
+                border-radius: 5px;
+                border: none;
+                margin-top: 3px;
+                margin-bottom: 10px;
+                background-color: #f2f2d0;
+            }
+
+            .eq_btn {
+                width: 99.2%;
+                height: 45px;
+                border-radius: 5px;
+                border: none;
+                margin-top: 3px;
+                background-color: #f2f2d0;
+            }
+
+            .btn:hover, .eq_btn:hover, .up_btn:hover, .c_btn:hover {
+                background-color: rgba(128, 128, 128, 0.1);
+            }
+
+            .btn:active, .eq_btn:active, .up_btn:active,  .c_btn.active {
+                background-color: rgba(156, 25, 25, 0.1);
+            }
+
+            #c_btn:active {
+                background-color: rgba(8, 1, 1, 0.1);
+            }
+
         </style>
         <script>
-
-            let A = 0; // Операнд в памяти
-            let op = "="; // Тип операции
-            let B = 0; // Операнд с дисплея
-
-            function cl_1() {
-                B = 10*B+1;
-                document.getElementById("d").innerHTML = B;
-            }
-            function cl_2() {
-                B = 10*B+2;
-                document.getElementById("d").innerHTML = B;
-            }
-            function cl_3() {
-                B = 10*B+3;
-                document.getElementById("d").innerHTML = B;
-            }
-            function cl_4() {
-                B = 10*B+4;
-                document.getElementById("d").innerHTML = B;
-            }
-            function cl_5() {
-                B = 10*B+5;
-                document.getElementById("d").innerHTML = B;
-            }
-            function cl_6() {
-                B = 10*B+6;
-                document.getElementById("d").innerHTML = B;
-            }
-            function cl_7() {
-                B = 10*B+7;
-                document.getElementById("d").innerHTML = B;
-            }
-            function cl_8() {
-                B = 10*B+8;
-                document.getElementById("d").innerHTML = B;
-            }
-            function cl_9() {
-                B = 10*B+9;
-                document.getElementById("d").innerHTML = B;
-            }
-            function cl_0() {
-                B = 10*B;
-                document.getElementById("d").innerHTML = B;
-            }
-
-            function calculation(new_oper) {
-                switch (op) {
-                    case "+": {
-                        A = A + B;
-                        break;
-                    };
-                    case "-": {
-                        A = A - B;
-                        break;
-                    };
-                    case "*": {
-                        A = A * B;
-                        break;
-                    };
-                    case "/": {
-                        A = Math.round(A / B);
-                        break;
-                    };
-                    case "=": {
-                        A = B;
-                        break;
-                    };
-                }
-                B = 0;
-                document.getElementById("d").innerHTML = A;
-                op = new_oper;
-            }
-
-            function cl_plus() {
-                calculation("+");
-            }
-
-            function cl_minus() {
-                calculation("-");
-            }
-
-            function cl_mul() {
-                calculation("*");
-            }
-
-            function cl_sep() {
-                calculation("/");
-            }
-
-            function cl_eq() {
-                calculation("=");
-            }
-
-            function cl_c() {
-                A = 0;
-                op = "=";
-                B = 0;
-            }
+            "use strict"
             
+            /* КЛАСС - дисплей */
+            function Display() {
+                this.disp = document.getElementById("display");
+
+                this.print = function(message) {
+                    /* Выведет на дисплей сообщение */
+                    let msg = String(message)
+                    document.getElementById("display").setAttribute("placeholder", msg);
+                }
+
+                this.content = function() {
+                    /* Вернет содержимое дисплея */
+                    return String(document.getElementById("display").getAttribute("placeholder"));
+                }
+
+                this.get_sign = function() {
+                    /* Вернет true, если у числа - знак плюс, и false - если минус */
+                    let cont = this.content();
+                    let result = true;
+                    if (cont[0]=='-') {result = false;}
+                    return result;
+                }
+
+                this.change_sign = function() {
+                    let cont = this.content();
+                    if (this.get_sign()) {
+                        this.print('-'+cont);
+                    } else {
+                        this.print(cont.substring(1));
+                    }
+                }
+
+                this.add_digit = function(digit) {
+                    /* Добавляем цифру к числу на дисплее */
+                    let digit_string = String(digit);
+                    let cont = this.content();
+                    let result;
+                    if (((cont=='0')||(cont=='-0')) && (digit!='.')) {
+                        /* Если на дисплее 0 - то его надо заменить на вводимую цифру
+                           кроме случая, если вводимая цифра - это десятичная точка*/
+                        result = cont.substring(0, cont.length-1) + digit_string;
+                    } else {
+                        result = cont + digit_string;
+                    }
+                    this.print(result);
+                }
+
+                this.add_dot = function() {
+                    /* Добавляем точку, если ее нет на дисплее */
+                    let cont = this.content();
+                    let is_decimal_fraction = false;
+                    for (let i = 0; i < cont.length; i+=1) {
+                        if (cont[i]=='.') {
+                            is_decimal_fraction = true;
+                        }
+                    }
+                    let result = is_decimal_fraction ? '' : '.';
+                    this.add_digit(result);
+                }
+            }
+
+            /* Начало программы */
+            let D = new Display();
+            let oper1 = 0;
+            let oper2 = 0;
+            let M = 0;
+            let operation = '=';
+            let reset = false;
+
+            function do_oper() {
+                switch (operation) {
+                    case '+': {
+                        oper1 = oper1 + oper2;
+                        break;
+                    }
+                    case '-': {
+                        oper1 = oper1 - oper2;
+                        break;
+                    }
+                    case '*': {
+                        oper1 = oper1 * oper2;
+                        break;
+                    }
+                    case '/': {
+                        if (oper2!=0) {
+                            oper1 = oper1 / oper2;
+                        } else {
+                            D.print('Ошибка: деление на ноль!');
+                            reset = true;
+                        }
+                        break;
+                    }
+                    case '=': {
+                        oper1 = oper2;
+                        break;
+                    }
+                }
+            }
+
+            function btn_press(bbb) {
+                switch (bbb) {
+                    case '+/-': {
+                        D.change_sign();
+                        break;
+                    }
+                    case 'c': {
+                        oper1 = 0;
+                        oper2 = 0;
+                        operation = '=';
+                        reset = false;
+                        D.print('0');
+                        break;
+                    }
+                    case 'CE': {
+                        D.print(0);
+                        break;
+                    }
+                    case '.': {
+                        D.add_dot();
+                        break;
+                    }
+                    case '=': {
+                        if (!reset) {
+                            oper2 = Number(D.content());
+                        }
+                        do_oper();
+                        D.print(String(oper1));
+                        reset = true;
+                        break;
+                    }
+                    case '+': {
+                        if (!reset) {
+                            oper2 = Number(D.content());
+                        }
+                        do_oper();
+                        oper2 = 0;
+                        operation = '+';
+                        D.print(String(oper1));
+                        reset = true;
+                        break;
+                    }
+                    case '-': {
+                        if (!reset) {
+                            oper2 = Number(D.content());
+                        }
+                        do_oper();
+                        oper2 = 0;
+                        operation = '-';
+                        D.print(String(oper1));
+                        reset = true;
+                        break;
+                    }
+                    case '*': {
+                        if (!reset) {
+                            oper2 = Number(D.content());
+                        }
+                        do_oper();
+                        oper2 = 0;
+                        operation = '*';
+                        D.print(String(oper1));
+                        reset = true;
+                        break;
+                    }
+                    case '/': {
+                        if (!reset) {
+                            oper2 = Number(D.content());
+                        }
+                        do_oper();
+                        oper2 = 0;
+                        operation = '/';
+                        D.print(String(oper1));
+                        reset = true;
+                        break;
+                    }
+                    case 'mc': {
+                        M = 0;
+                        document.getElementById("mcc").innerHTML = "MC";
+                        break;
+                    }
+                    case 'm+': {
+                        M = M + Number(D.content());
+                        if (M==0) {
+                            document.getElementById("mcc").innerHTML = "MC";
+                        } else {
+                            document.getElementById("mcc").innerHTML = ">>MC<<";
+                        }
+                        break;
+                    }
+                    case 'mr': {
+                        D.print(String(M));
+                        oper2 = M;
+                        break;
+                    }
+                }
+            }
+
+            function digit_press(ddd) {
+                if (reset) {
+                    D.print('0');
+                    reset = false
+                }
+                D.add_digit(ddd);
+            }
+
         </script>
     </head>
     <body>
-        <!-- Тело документа -->
-        <table border="1" width="30%" align="center">
-            <tr>
-                <td width="100%" style="background: white; text-align: right;" id="d">0</td>
-            </tr>
-        </table>
-        <table border="1" width="30%" align="center">
-            <tr>
-                <td onclick="cl_7()">7</td><td onclick="cl_8()">8</td><td onclick="cl_9()">9</td><td onclick="cl_plus()">+</td>
-            </tr>
-            <tr>
-                <td onclick="cl_4()">4</td><td onclick="cl_5()">5</td><td onclick="cl_6()">6</td><td onclick="cl_minus()">-</td>
-            </tr>
-            <tr>
-                <td onclick="cl_1()">1</td><td onclick="cl_2()">2</td><td onclick="cl_3()">3</td><td onclick="cl_mul()">*</td>
-            </tr>            
-            <tr>
-                <td onclick="cl_c()">C</td><td onclick="cl_0()">0</td><td onclick="cl_eq()">=</td><td onclick="cl_sep()">/</td>
-            </tr>            
-        </table>
-        <p id="zzz"></p>
+
+        <div class="container">  <!-- Контейнер для калькулятора -->
+            <div class="calc"> <!-- Собственно, калькулятор -->
+                <input id="display" readonly="readonly" placeholder="0"></input>
+                <br>
+                <button class="up_btn" onclick="btn_press('mr')">MR</button>
+                <button class="up_btn" onclick="btn_press('m+')">M+</button>
+                <button class="up_btn" id="mcc" onclick="btn_press('mc')">MC</button>
+                <button class="c_btn" onclick="btn_press('c')">C</button>
+                <br>
+                <button class="btn" onclick="digit_press('7')">7</button>
+                <button class="btn" onclick="digit_press('8')">8</button>
+                <button class="btn" onclick="digit_press('9')">9</button>
+                <button class="btn" onclick="btn_press('+')">+</button>
+                <br>
+                <button class="btn" onclick="digit_press('4')">4</button>
+                <button class="btn" onclick="digit_press('5')">5</button>
+                <button class="btn" onclick="digit_press('6')">6</button>
+                <button class="btn" onclick="btn_press('-')">-</button>
+                <br>
+                <button class="btn" onclick="digit_press('1')">1</button>
+                <button class="btn" onclick="digit_press('2')">2</button>
+                <button class="btn" onclick="digit_press('3')">3</button>
+                <button class="btn" onclick="btn_press('*')">*</button>
+                <br>
+                <button class="btn" onclick="digit_press('7')">7</button>
+                <button class="btn" onclick="digit_press('8')">8</button>
+                <button class="btn" onclick="digit_press('9')">9</button>
+                <button class="btn" onclick="btn_press('/')">/</button>
+                <br>
+                <button class="btn" onclick="btn_press('+/-')">+/-</button>
+                <button class="btn" onclick="digit_press('0')">0</button>
+                <button class="btn" onclick="btn_press('.')">.</button>
+                <button class="btn" onclick="btn_press('CE')">CE</button>
+                <br>
+                <button class="eq_btn" onclick="btn_press('=')">=</button>
+
+            </div>
+        </div>
+
     </body>
 </html>
+
+
+
